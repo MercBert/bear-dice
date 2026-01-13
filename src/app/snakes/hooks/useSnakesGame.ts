@@ -180,6 +180,7 @@ export function useSnakesGame() {
 
       if (tile.type === 'snake') {
         // Player hit a snake - lose
+        play('lose');
         return {
           ...prev,
           board: newBoard,
@@ -201,6 +202,7 @@ export function useSnakesGame() {
         if (newRoll >= MAX_ROLLS) {
           const netGain = calculateNetGain(prev.betAmount, newMultiplier);
           const payout = calculatePayout(prev.betAmount, newMultiplier);
+          play('win');
           return {
             ...prev,
             board: newBoard,
@@ -232,6 +234,7 @@ export function useSnakesGame() {
       const netGain = calculateNetGain(prev.betAmount, prev.currentMultiplier);
       const payout = calculatePayout(prev.betAmount, prev.currentMultiplier);
 
+      play('win');
       return {
         ...prev,
         gameStatus: 'won',
@@ -239,7 +242,7 @@ export function useSnakesGame() {
         balance: prev.balance + payout - prev.betAmount,
       };
     });
-  }, []);
+  }, [play]);
 
   // Reset game to idle
   const resetGame = useCallback(() => {
