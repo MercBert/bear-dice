@@ -17,6 +17,7 @@ import {
   WIN_DISPLAY_DURATION,
   LOSE_DISPLAY_DURATION,
   AUTO_ROLL_DELAY,
+  STEP_DURATION,
 } from '../utils/constants';
 
 const initialState: GameState = {
@@ -49,6 +50,7 @@ export function useSnakesGame() {
   const [state, setState] = useState<GameState>(initialState);
   const autoPlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const diceAnimationRef = useRef<NodeJS.Timeout | null>(null);
+  const steppingAnimationRef = useRef<NodeJS.Timeout | null>(null);
   const { play, stop } = useAudio();
 
   // Cleanup on unmount
@@ -59,6 +61,9 @@ export function useSnakesGame() {
       }
       if (diceAnimationRef.current) {
         clearTimeout(diceAnimationRef.current);
+      }
+      if (steppingAnimationRef.current) {
+        clearTimeout(steppingAnimationRef.current);
       }
     };
   }, []);
@@ -124,6 +129,37 @@ export function useSnakesGame() {
     []
   );
 
+  // Animate stepping through tiles from position 1 to target
+  const animateSteps = useCallback(
+    (targetPosition: number): Promise<void> => {
+      return new Promise((resolve) => {
+        let currentStep = 1;
+
+        const step = () => {
+          // Update highlighted position
+          setState((prev) => ({ ...prev, highlightedPosition: currentStep }));
+
+          // Play footstep only when stepping to a new tile (not at start position)
+          if (currentStep > 1) {
+            play('footstep');
+          }
+
+          if (currentStep < targetPosition) {
+            currentStep++;
+            steppingAnimationRef.current = setTimeout(step, STEP_DURATION);
+          } else {
+            // Stepping complete
+            resolve();
+          }
+        };
+
+        // Start stepping from position 1
+        step();
+      });
+    },
+    [play]
+  );
+
   // Start a new game
   const startGame = useCallback(() => {
     setState((prev) => {
@@ -150,6 +186,11 @@ export function useSnakesGame() {
     if (currentState.gameStatus !== 'playing' || currentState.isRolling) return;
     if (currentState.currentRoll >= MAX_ROLLS) return;
 
+    // Clear any pending stepping animation
+    if (steppingAnimationRef.current) {
+      clearTimeout(steppingAnimationRef.current);
+    }
+
     // SINGLE SOURCE OF TRUTH: Generate dice values ONCE
     // These exact values are used for BOTH display AND tile position
     // Use test values OR random based on test mode
@@ -167,20 +208,32 @@ export function useSnakesGame() {
     // Animate dice - passes the SAME values to display
     await animateDice(diceResult);
 
+    // Animate stepping from tile 1 to landing position
+    await animateSteps(position);
+
     // Get tile using the SAME position calculated from dice
     const tile = getTileAtPosition(currentState.board, position);
 
     if (!tile) return;
 
+    // Determine outcome based on tile type
+    const isSnake = tile.type === 'snake';
+    const newMultiplier =
+      tile.type === 'multiplier' && tile.value
+        ? Math.round(currentState.currentMultiplier * tile.value * 100) / 100
+        : currentState.currentMultiplier;
+    const newRoll = currentState.currentRoll + 1;
+    const isMaxRolls = newRoll >= MAX_ROLLS;
+
+    // Update state
     setState((prev) => {
       // Reveal the tile
       const newBoard = prev.board.map((t) =>
         t.position === position ? { ...t, revealed: true } : t
       );
 
-      if (tile.type === 'snake') {
+      if (isSnake) {
         // Player hit a snake - lose
-        play('lose');
         return {
           ...prev,
           board: newBoard,
@@ -189,32 +242,22 @@ export function useSnakesGame() {
           totalNetGain: prev.totalNetGain - prev.betAmount,
           balance: prev.balance - prev.betAmount,
         };
+      } else if (isMaxRolls) {
+        // Max rolls reached (auto-cashout)
+        const netGain = calculateNetGain(prev.betAmount, newMultiplier);
+        const payout = calculatePayout(prev.betAmount, newMultiplier);
+        return {
+          ...prev,
+          board: newBoard,
+          highlightedPosition: position,
+          currentMultiplier: newMultiplier,
+          currentRoll: newRoll,
+          gameStatus: 'won',
+          totalNetGain: prev.totalNetGain + netGain,
+          balance: prev.balance + payout - prev.betAmount,
+        };
       } else {
-        // Player landed on multiplier
-        const newMultiplier =
-          tile.type === 'multiplier' && tile.value
-            ? Math.round(prev.currentMultiplier * tile.value * 100) / 100
-            : prev.currentMultiplier;
-
-        const newRoll = prev.currentRoll + 1;
-
-        // Check if max rolls reached (auto-cashout)
-        if (newRoll >= MAX_ROLLS) {
-          const netGain = calculateNetGain(prev.betAmount, newMultiplier);
-          const payout = calculatePayout(prev.betAmount, newMultiplier);
-          play('win');
-          return {
-            ...prev,
-            board: newBoard,
-            highlightedPosition: position,
-            currentMultiplier: newMultiplier,
-            currentRoll: newRoll,
-            gameStatus: 'won',
-            totalNetGain: prev.totalNetGain + netGain,
-            balance: prev.balance + payout - prev.betAmount,
-          };
-        }
-
+        // Player landed on multiplier, game continues
         return {
           ...prev,
           board: newBoard,
@@ -224,7 +267,14 @@ export function useSnakesGame() {
         };
       }
     });
-  }, [state, animateDice, play, stop]);
+
+    // Play outcome sound after stepping and state update complete
+    if (isSnake) {
+      play('lose');
+    } else if (isMaxRolls) {
+      play('win');
+    }
+  }, [state, animateDice, animateSteps, play, stop]);
 
   // Cash out
   const cashout = useCallback(() => {
