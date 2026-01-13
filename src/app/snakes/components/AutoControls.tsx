@@ -9,6 +9,7 @@ interface AutoControlsProps {
   onStart: () => void;
   onStop: () => void;
   disabled?: boolean;
+  onClickSound?: () => void;
 }
 
 export default function AutoControls({
@@ -17,6 +18,7 @@ export default function AutoControls({
   onStart,
   onStop,
   disabled = false,
+  onClickSound,
 }: AutoControlsProps) {
   const { rollsPerGame, numberOfGames, isRunning, gamesPlayed } = autoSettings;
 
@@ -86,7 +88,7 @@ export default function AutoControls({
             }}
           />
           <button
-            onClick={() => onSettingsChange({ numberOfGames: 0 })}
+            onClick={() => { if (!disabled && !isRunning) { onClickSound?.(); onSettingsChange({ numberOfGames: 0 }); } }}
             disabled={disabled || isRunning}
             className={`px-4 py-3 rounded-lg text-lg font-bold transition-all ${
               disabled || isRunning ? 'opacity-50 cursor-not-allowed' : ''
@@ -121,7 +123,7 @@ export default function AutoControls({
 
       {/* Start/Stop button */}
       <motion.button
-        onClick={isRunning ? onStop : onStart}
+        onClick={() => { if (!disabled) { onClickSound?.(); isRunning ? onStop() : onStart(); } }}
         disabled={disabled}
         className={`w-full py-4 font-bold rounded-xl transition-all ${
           disabled ? 'opacity-50 cursor-not-allowed' : ''

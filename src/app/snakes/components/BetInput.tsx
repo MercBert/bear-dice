@@ -9,6 +9,7 @@ interface BetInputProps {
   onDouble: () => void;
   disabled?: boolean;
   maxBet: number;
+  onClickSound?: () => void;
 }
 
 export default function BetInput({
@@ -18,6 +19,7 @@ export default function BetInput({
   onDouble,
   disabled = false,
   maxBet,
+  onClickSound,
 }: BetInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(e.target.value);
@@ -61,7 +63,7 @@ export default function BetInput({
           />
         </div>
         <button
-          onClick={onHalf}
+          onClick={() => { if (!disabled) { onClickSound?.(); onHalf(); } }}
           disabled={disabled}
           className={`px-3 md:px-4 py-2 md:py-3 rounded-lg text-sm font-bold transition-all hover:border-amber-400 ${
             disabled ? 'opacity-50 cursor-not-allowed' : ''
@@ -75,7 +77,7 @@ export default function BetInput({
           ½
         </button>
         <button
-          onClick={onDouble}
+          onClick={() => { if (!disabled) { onClickSound?.(); onDouble(); } }}
           disabled={disabled}
           className={`px-3 md:px-4 py-2 md:py-3 rounded-lg text-sm font-bold transition-all hover:border-amber-400 ${
             disabled ? 'opacity-50 cursor-not-allowed' : ''

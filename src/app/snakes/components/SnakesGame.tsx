@@ -4,6 +4,7 @@ import { useEffect, useCallback } from 'react';
 import ControlPanel from './ControlPanel';
 import GameBoard from './GameBoard';
 import { useSnakesGame } from '../hooks/useSnakesGame';
+import { useAudio } from '../hooks/useAudio';
 
 export default function SnakesGame() {
   const {
@@ -22,6 +23,9 @@ export default function SnakesGame() {
     halfBet,
     doubleBet,
   } = useSnakesGame();
+
+  const { play } = useAudio();
+  const playClick = useCallback(() => play('click'), [play]);
 
   // Keyboard controls
   const handleKeyDown = useCallback(
@@ -102,6 +106,7 @@ export default function SnakesGame() {
           onCashout={cashout}
           onStartAutoPlay={startAutoPlay}
           onStopAutoPlay={stopAutoPlay}
+          onClickSound={playClick}
         />
       </div>
     </div>

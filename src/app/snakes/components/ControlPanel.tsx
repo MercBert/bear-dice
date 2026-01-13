@@ -23,6 +23,7 @@ interface ControlPanelProps {
   onCashout: () => void;
   onStartAutoPlay: () => void;
   onStopAutoPlay: () => void;
+  onClickSound?: () => void;
 }
 
 export default function ControlPanel({
@@ -39,6 +40,7 @@ export default function ControlPanel({
   onCashout,
   onStartAutoPlay,
   onStopAutoPlay,
+  onClickSound,
 }: ControlPanelProps) {
   const {
     betAmount,
@@ -83,6 +85,7 @@ export default function ControlPanel({
               onPlay={onPlay}
               onRoll={onRoll}
               onCashout={onCashout}
+              onClickSound={onClickSound}
             />
           ) : (
             <AutoControls
@@ -91,6 +94,7 @@ export default function ControlPanel({
               onStart={onStartAutoPlay}
               onStop={onStopAutoPlay}
               disabled={isGameInProgress && !isAutoRunning}
+              onClickSound={onClickSound}
             />
           )}
         </div>
@@ -104,6 +108,7 @@ export default function ControlPanel({
             onDouble={onDoubleBet}
             disabled={controlsDisabled}
             maxBet={balance}
+            onClickSound={onClickSound}
           />
         </div>
 
@@ -127,6 +132,7 @@ export default function ControlPanel({
             mode={mode}
             onModeChange={onModeChange}
             disabled={controlsDisabled}
+            onClickSound={onClickSound}
           />
         </div>
 

@@ -6,12 +6,14 @@ interface ModeToggleProps {
   mode: GameMode;
   onModeChange: (mode: GameMode) => void;
   disabled?: boolean;
+  onClickSound?: () => void;
 }
 
 export default function ModeToggle({
   mode,
   onModeChange,
   disabled = false,
+  onClickSound,
 }: ModeToggleProps) {
   return (
     <div
@@ -31,7 +33,7 @@ export default function ModeToggle({
           backgroundColor: mode === 'manual' ? 'var(--accent-amber)' : 'transparent',
           color: mode === 'manual' ? 'var(--text-on-amber)' : 'var(--text-secondary)',
         }}
-        onClick={() => onModeChange('manual')}
+        onClick={() => { if (!disabled) { onClickSound?.(); onModeChange('manual'); } }}
         disabled={disabled}
       >
         Manual
@@ -46,7 +48,7 @@ export default function ModeToggle({
           backgroundColor: mode === 'auto' ? 'var(--accent-amber)' : 'transparent',
           color: mode === 'auto' ? 'var(--text-on-amber)' : 'var(--text-secondary)',
         }}
-        onClick={() => onModeChange('auto')}
+        onClick={() => { if (!disabled) { onClickSound?.(); onModeChange('auto'); } }}
         disabled={disabled}
       >
         Auto

@@ -12,6 +12,7 @@ interface ManualControlsProps {
   onPlay: () => void;
   onRoll: () => void;
   onCashout: () => void;
+  onClickSound?: () => void;
 }
 
 export default function ManualControls({
@@ -22,6 +23,7 @@ export default function ManualControls({
   onPlay,
   onRoll,
   onCashout,
+  onClickSound,
 }: ManualControlsProps) {
   const isIdle = gameStatus === 'idle';
   const isPlaying = gameStatus === 'playing';
@@ -34,7 +36,7 @@ export default function ManualControls({
     <div className="space-y-2 md:space-y-3">
       {isIdle ? (
         <motion.button
-          onClick={onPlay}
+          onClick={() => { onClickSound?.(); onPlay(); }}
           className="w-full py-3 md:py-4 font-bold rounded-xl transition-all text-sm md:text-base"
           style={{
             backgroundColor: 'var(--accent-amber)',
@@ -49,7 +51,7 @@ export default function ManualControls({
       ) : isPlaying ? (
         <div className="flex gap-2 md:gap-3">
           <motion.button
-            onClick={onCashout}
+            onClick={() => { if (canCashout) { onClickSound?.(); onCashout(); } }}
             disabled={!canCashout}
             className={`flex-1 py-2.5 md:py-4 font-bold rounded-xl transition-all ${
               !canCashout ? 'opacity-50 cursor-not-allowed' : ''
@@ -70,7 +72,7 @@ export default function ManualControls({
             )}
           </motion.button>
           <motion.button
-            onClick={onRoll}
+            onClick={() => { if (canRoll) { onClickSound?.(); onRoll(); } }}
             disabled={!canRoll}
             className={`flex-1 py-2.5 md:py-4 font-bold rounded-xl transition-all text-sm md:text-base ${
               !canRoll ? 'opacity-50 cursor-not-allowed' : ''
@@ -88,7 +90,7 @@ export default function ManualControls({
         </div>
       ) : (
         <motion.button
-          onClick={onPlay}
+          onClick={() => { onClickSound?.(); onPlay(); }}
           className="w-full py-3 md:py-4 font-bold rounded-xl transition-all text-sm md:text-base"
           style={{
             backgroundColor: 'var(--accent-amber)',
