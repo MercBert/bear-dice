@@ -71,7 +71,7 @@ export default function Tile({ tile, isHighlighted, position, difficulty, showVa
       {/* Start tile */}
       {isStart && (
         <>
-          <PlayIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: 'var(--text-on-amber)' }} />
+          <PlayIcon className="w-6 h-6 sm:w-8 sm:h-8 text-[#2D2A26]" />
           <span className="text-[10px] sm:text-xs font-bold mt-1" style={{ color: 'var(--text-secondary)' }}>
             START
           </span>
