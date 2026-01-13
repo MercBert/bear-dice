@@ -130,30 +130,45 @@ export function useSnakesGame() {
   );
 
   // Animate stepping through tiles from position 1 to target
+  // isFinalBear: if true, skip footstep on final tile (bear slash sound will play instead)
   const animateSteps = useCallback(
-    (targetPosition: number): Promise<void> => {
+    (targetPosition: number, isFinalBear: boolean = false): Promise<void> => {
       return new Promise((resolve) => {
-        let currentStep = 1;
+        // Build array of all positions to step through: [1, 2, 3, ..., targetPosition]
+        const positions: number[] = [];
+        for (let i = 1; i <= targetPosition; i++) {
+          positions.push(i);
+        }
+
+        let index = 0;
 
         const step = () => {
-          // Update highlighted position
-          setState((prev) => ({ ...prev, highlightedPosition: currentStep }));
+          if (index >= positions.length) {
+            // All positions visited, wait a moment then resolve
+            steppingAnimationRef.current = setTimeout(resolve, STEP_DURATION / 2);
+            return;
+          }
 
-          // Play footstep only when stepping to a new tile (not at start position)
-          if (currentStep > 1) {
+          const position = positions[index];
+          const isLastStep = index === positions.length - 1;
+
+          // Update highlighted position
+          setState((prev) => ({ ...prev, highlightedPosition: position }));
+
+          // Play footstep when moving to a new tile, but:
+          // - Not at start position (position 1)
+          // - Not on final bear tile (slash sound will play instead)
+          if (position > 1 && !(isLastStep && isFinalBear)) {
             play('footstep');
           }
 
-          if (currentStep < targetPosition) {
-            currentStep++;
-            steppingAnimationRef.current = setTimeout(step, STEP_DURATION);
-          } else {
-            // Stepping complete
-            resolve();
-          }
+          index++;
+
+          // Schedule next step after STEP_DURATION
+          steppingAnimationRef.current = setTimeout(step, STEP_DURATION);
         };
 
-        // Start stepping from position 1
+        // Start stepping
         step();
       });
     },
@@ -208,16 +223,18 @@ export function useSnakesGame() {
     // Animate dice - passes the SAME values to display
     await animateDice(diceResult);
 
-    // Animate stepping from tile 1 to landing position
-    await animateSteps(position);
-
-    // Get tile using the SAME position calculated from dice
+    // Check if landing tile is a bear BEFORE animating (to skip footstep on bear)
     const tile = getTileAtPosition(currentState.board, position);
+    const isLandingOnBear = tile?.type === 'snake';
+
+    // Animate stepping from tile 1 to landing position
+    // Pass bear flag to skip footstep on final tile (slash sound plays instead)
+    await animateSteps(position, isLandingOnBear);
 
     if (!tile) return;
 
-    // Determine outcome based on tile type
-    const isSnake = tile.type === 'snake';
+    // Determine outcome based on tile type (reuse check from above)
+    const isSnake = isLandingOnBear;
     const newMultiplier =
       tile.type === 'multiplier' && tile.value
         ? Math.round(currentState.currentMultiplier * tile.value * 100) / 100
