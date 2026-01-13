@@ -45,38 +45,53 @@ function DiceFace({ value }: { value: number }) {
 export default function Dice3D({ value, isRolling }: Dice3DProps) {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isAnimating, setIsAnimating] = useState(false);
+  const [hasLanded, setHasLanded] = useState(true);
 
   useEffect(() => {
     if (isRolling) {
-      // Start rapid spinning
-      setIsAnimating(true);
+      // Reset rotation before starting new roll
+      setRotation({ x: 0, y: 0 });
+      setHasLanded(false);
 
-      // Random spin during roll
+      // Small delay then start rapid spinning
+      const startTimeout = setTimeout(() => {
+        setIsAnimating(true);
+      }, 50);
+
+      // Random spin during roll (faster interval for smoother animation)
       const spinInterval = setInterval(() => {
         setRotation({
           x: Math.random() * 360,
           y: Math.random() * 360,
         });
-      }, 100);
+      }, 50);
 
-      return () => clearInterval(spinInterval);
+      return () => {
+        clearTimeout(startTimeout);
+        clearInterval(spinInterval);
+      };
     } else {
       // Land on the final value
       setIsAnimating(false);
       const target = diceRotations[value] || diceRotations[1];
 
-      // Add extra spins for dramatic effect when landing
+      // Set final rotation
       setRotation({
         x: target.x,
         y: target.y,
       });
+
+      // Mark as landed for smooth transition
+      setTimeout(() => setHasLanded(true), 50);
     }
   }, [isRolling, value]);
+
+  const cubeClass = isAnimating ? 'rolling' : hasLanded ? 'landed' : '';
 
   return (
     <div className="dice-3d">
       <div
-        className={`dice-cube ${isAnimating ? 'rolling' : ''}`}
+        className={`dice-cube ${cubeClass}`}
         style={{
           transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
         }}
