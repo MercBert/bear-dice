@@ -66,59 +66,66 @@ export default function ControlPanel({
         Setup Game
       </h2>
 
-      {/* Controls Section */}
-      <div className="space-y-5">
-        {/* Mode Toggle */}
-        <ModeToggle
-          mode={mode}
-          onModeChange={onModeChange}
-          disabled={controlsDisabled}
-        />
+      {/* Controls Section - flex with order classes for mobile reordering */}
+      <div className="flex flex-col gap-5">
+        {/* Play/Roll Controls - first on mobile, fourth on desktop */}
+        <div className="order-1 md:order-4">
+          {mode === 'manual' ? (
+            <ManualControls
+              gameStatus={gameStatus}
+              currentMultiplier={currentMultiplier}
+              betAmount={betAmount}
+              isRolling={isRolling}
+              onPlay={onPlay}
+              onRoll={onRoll}
+              onCashout={onCashout}
+            />
+          ) : (
+            <AutoControls
+              autoSettings={autoSettings}
+              onSettingsChange={onAutoSettingsChange}
+              onStart={onStartAutoPlay}
+              onStop={onStopAutoPlay}
+              disabled={isGameInProgress && !isAutoRunning}
+            />
+          )}
+        </div>
 
-        {/* Bet Input */}
-        <BetInput
-          value={betAmount}
-          onChange={onBetChange}
-          onHalf={onHalfBet}
-          onDouble={onDoubleBet}
-          disabled={controlsDisabled}
-          maxBet={balance}
-        />
-
-        {/* Difficulty Select */}
-        <DifficultySelect
-          value={difficulty}
-          onChange={onDifficultyChange}
-          disabled={controlsDisabled}
-        />
-
-        {/* Controls based on mode */}
-        {mode === 'manual' ? (
-          <ManualControls
-            gameStatus={gameStatus}
-            currentMultiplier={currentMultiplier}
-            betAmount={betAmount}
-            isRolling={isRolling}
-            onPlay={onPlay}
-            onRoll={onRoll}
-            onCashout={onCashout}
+        {/* Bet Input - second on both */}
+        <div className="order-2 md:order-2">
+          <BetInput
+            value={betAmount}
+            onChange={onBetChange}
+            onHalf={onHalfBet}
+            onDouble={onDoubleBet}
+            disabled={controlsDisabled}
+            maxBet={balance}
           />
-        ) : (
-          <AutoControls
-            autoSettings={autoSettings}
-            onSettingsChange={onAutoSettingsChange}
-            onStart={onStartAutoPlay}
-            onStop={onStopAutoPlay}
-            disabled={isGameInProgress && !isAutoRunning}
+        </div>
+
+        {/* Difficulty Select - third on both */}
+        <div className="order-3 md:order-3">
+          <DifficultySelect
+            value={difficulty}
+            onChange={onDifficultyChange}
+            disabled={controlsDisabled}
           />
-        )}
+        </div>
+
+        {/* Net Gain Display - fourth on mobile, fifth on desktop */}
+        <div className="order-4 md:order-5">
+          <NetGainDisplay totalNetGain={totalNetGain} balance={balance} />
+        </div>
+
+        {/* Mode Toggle - last on mobile, first on desktop */}
+        <div className="order-5 md:order-1">
+          <ModeToggle
+            mode={mode}
+            onModeChange={onModeChange}
+            disabled={controlsDisabled}
+          />
+        </div>
       </div>
-
-      {/* Spacer to push stats to bottom */}
-      <div className="flex-1 min-h-4" />
-
-      {/* Net Gain Display - anchored to bottom */}
-      <NetGainDisplay totalNetGain={totalNetGain} balance={balance} />
     </div>
   );
 }
