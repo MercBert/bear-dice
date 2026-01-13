@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Persona Journey Design System */
+:root {
+  /* Backgrounds */
+  --bg-primary: #F5F0E8;
+  --bg-secondary: #E8E4DC;
+
+  /* Brand / Accent */
+  --accent-amber: #F5A623;
+  --accent-amber-hover: #E09610;
+
+  /* Cards */
+  --card-terracotta: #C75B47;
+  --card-dusty-blue: #8BA4B8;
+  --card-warm-gray: #E8E4DC;
+  --card-olive: #A8B077;
+
+  /* Text */
+  --text-primary: #2D2A26;
+  --text-secondary: #6B6560;
+  --text-tertiary: #9A9590;
+  --text-on-amber: #2D2A26;
+  --text-on-dark: #F5F0E8;
+
+  /* States */
+  --state-success: #A8B077;
+  --state-success-text: #4A5A2A;
+  --state-danger: #B54A4A;
+  --state-danger-bg: #D4736A;
+  --state-warning: #E8B44C;
+
+  /* Game-specific */
+  --tile-default: #E8E4DC;
+  --tile-revealed: #F5F0E8;
+  --tile-highlighted: #F5A623;
+  --tile-snake: #C75B47;
+  --dice-bg: #F5F0E8;
+  --dice-dots: #2D2A26;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Border Radius - Generous! */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* shadcn compatibility */
+  --radius: 0.75rem;
+  --background: #F5F0E8;
+  --foreground: #2D2A26;
+  --card: #E8E4DC;
+  --card-foreground: #2D2A26;
+  --popover: #F5F0E8;
+  --popover-foreground: #2D2A26;
+  --primary: #F5A623;
+  --primary-foreground: #2D2A26;
+  --secondary: #E8E4DC;
+  --secondary-foreground: #2D2A26;
+  --muted: #E8E4DC;
+  --muted-foreground: #6B6560;
+  --accent: #F5A623;
+  --accent-foreground: #2D2A26;
+  --destructive: #B54A4A;
+  --border: #9A9590;
+  --input: #9A9590;
+  --ring: #F5A623;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Nunito', system-ui, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+}
+
+/* Slashed zeros for retro-tech feel */
+.numeric, .slashed-zero {
+  font-variant-numeric: slashed-zero;
+}
+
+/* Typography utilities */
+.text-display {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.text-headline {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.text-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.text-multiplier {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-variant-numeric: slashed-zero;
+  letter-spacing: -0.01em;
+}
+
+.text-stat {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-variant-numeric: slashed-zero;
+}
+
+/* Button styles */
+.btn-primary {
+  background: var(--accent-amber);
+  color: var(--text-on-amber);
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent-amber-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--bg-primary);
+}
+
+/* Animations */
+@keyframes dice-roll {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-5deg) scale(1.05); }
+  75% { transform: rotate(5deg) scale(1.05); }
+}
+
+@keyframes tile-reveal {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes celebrate {
+  0% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.dice-rolling {
+  animation: dice-roll 0.1s ease-in-out infinite;
+}
+
+.tile-revealing {
+  animation: tile-reveal 0.3s ease-out forwards;
+}
+
+.win-celebration {
+  animation: celebrate 0.4s ease-out forwards;
+}
+
+/* VHS Scanline overlay (optional) */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
