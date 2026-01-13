@@ -6,7 +6,8 @@ import DifficultySelect from './DifficultySelect';
 import ManualControls from './ManualControls';
 import AutoControls from './AutoControls';
 import NetGainDisplay from './NetGainDisplay';
-import { GameState, Difficulty, GameMode, AutoSettings } from '../types';
+import TestModeControls from './TestModeControls';
+import { GameState, Difficulty, GameMode, AutoSettings, TestModeSettings } from '../types';
 
 interface ControlPanelProps {
   state: GameState;
@@ -16,6 +17,7 @@ interface ControlPanelProps {
   onDifficultyChange: (value: Difficulty) => void;
   onModeChange: (mode: GameMode) => void;
   onAutoSettingsChange: (settings: Partial<AutoSettings>) => void;
+  onTestModeSettingsChange: (settings: Partial<TestModeSettings>) => void;
   onPlay: () => void;
   onRoll: () => void;
   onCashout: () => void;
@@ -31,6 +33,7 @@ export default function ControlPanel({
   onDifficultyChange,
   onModeChange,
   onAutoSettingsChange,
+  onTestModeSettingsChange,
   onPlay,
   onRoll,
   onCashout,
@@ -43,6 +46,7 @@ export default function ControlPanel({
     mode,
     balance,
     autoSettings,
+    testModeSettings,
     gameStatus,
     currentMultiplier,
     isRolling,
@@ -122,6 +126,15 @@ export default function ControlPanel({
           <ModeToggle
             mode={mode}
             onModeChange={onModeChange}
+            disabled={controlsDisabled}
+          />
+        </div>
+
+        {/* Test Mode Controls - at the bottom */}
+        <div className="order-6 md:order-6">
+          <TestModeControls
+            settings={testModeSettings}
+            onSettingsChange={onTestModeSettingsChange}
             disabled={controlsDisabled}
           />
         </div>

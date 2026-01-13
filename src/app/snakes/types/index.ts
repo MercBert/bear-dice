@@ -17,6 +17,12 @@ export interface AutoSettings {
   isRunning: boolean;
 }
 
+export interface TestModeSettings {
+  enabled: boolean;
+  die1Value: number; // 1-6
+  die2Value: number; // 1-6
+}
+
 export interface GameState {
   // Configuration
   betAmount: number;
@@ -26,6 +32,9 @@ export interface GameState {
 
   // Auto mode settings
   autoSettings: AutoSettings;
+
+  // Test mode settings
+  testModeSettings: TestModeSettings;
 
   // Game state
   gameStatus: GameStatus;

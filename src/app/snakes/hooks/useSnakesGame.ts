@@ -29,6 +29,11 @@ const initialState: GameState = {
     gamesPlayed: 0,
     isRunning: false,
   },
+  testModeSettings: {
+    enabled: false,
+    die1Value: 1,
+    die2Value: 1,
+  },
   gameStatus: 'idle',
   currentRoll: 0,
   currentMultiplier: 1.0,
@@ -85,6 +90,17 @@ export function useSnakesGame() {
     []
   );
 
+  // Set test mode settings
+  const setTestModeSettings = useCallback(
+    (settings: Partial<GameState['testModeSettings']>) => {
+      setState((prev) => ({
+        ...prev,
+        testModeSettings: { ...prev.testModeSettings, ...settings },
+      }));
+    },
+    []
+  );
+
   // Animate dice rolling - CSS handles the visual spin animation
   const animateDice = useCallback(
     (finalValues: [number, number]): Promise<void> => {
@@ -134,7 +150,11 @@ export function useSnakesGame() {
 
     // SINGLE SOURCE OF TRUTH: Generate dice values ONCE
     // These exact values are used for BOTH display AND tile position
-    const diceResult = rollDice();
+    // Use test values OR random based on test mode
+    const { testModeSettings } = currentState;
+    const diceResult: [number, number] = testModeSettings.enabled
+      ? [testModeSettings.die1Value, testModeSettings.die2Value]
+      : rollDice();
     const [die1, die2] = diceResult;
     const position = die1 + die2; // Tile position = sum of dice (2-12)
 
@@ -361,6 +381,7 @@ export function useSnakesGame() {
     setDifficulty,
     setMode,
     setAutoSettings,
+    setTestModeSettings,
     startGame,
     roll,
     cashout,

@@ -12,6 +12,7 @@ export default function SnakesGame() {
     setDifficulty,
     setMode,
     setAutoSettings,
+    setTestModeSettings,
     startGame,
     roll,
     cashout,
@@ -95,6 +96,7 @@ export default function SnakesGame() {
           onDifficultyChange={setDifficulty}
           onModeChange={setMode}
           onAutoSettingsChange={setAutoSettings}
+          onTestModeSettingsChange={setTestModeSettings}
           onPlay={startGame}
           onRoll={roll}
           onCashout={cashout}
