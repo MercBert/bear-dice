@@ -1,6 +1,6 @@
 'use client';
 
-import Die from './Die';
+import Dice3D from './Dice3D';
 import MultiplierDisplay from './MultiplierDisplay';
 import { GameStatus } from '../types';
 
@@ -28,9 +28,9 @@ export default function DiceDisplay({
         boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)',
       }}
     >
-      <div className="flex gap-3 sm:gap-4">
-        <Die value={diceValues[0]} isRolling={isRolling} />
-        <Die value={diceValues[1]} isRolling={isRolling} />
+      <div className="flex gap-4 sm:gap-6">
+        <Dice3D value={diceValues[0]} isRolling={isRolling} />
+        <Dice3D value={diceValues[1]} isRolling={isRolling} />
       </div>
       <MultiplierDisplay
         value={multiplier}
