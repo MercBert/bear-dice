@@ -13,7 +13,6 @@ import {
   INITIAL_BALANCE,
   MAX_ROLLS,
   DICE_ROLL_DURATION,
-  DICE_CYCLE_INTERVAL,
   WIN_DISPLAY_DURATION,
   LOSE_DISPLAY_DURATION,
   AUTO_ROLL_DELAY,
@@ -86,37 +85,22 @@ export function useSnakesGame() {
     []
   );
 
-  // Animate dice rolling
+  // Animate dice rolling - CSS handles the visual spin animation
   const animateDice = useCallback(
     (finalValues: [number, number]): Promise<void> => {
       return new Promise((resolve) => {
+        // Start rolling animation (CSS takes over the visual spin)
         setState((prev) => ({ ...prev, isRolling: true }));
 
-        const startTime = Date.now();
-        const animate = () => {
-          const elapsed = Date.now() - startTime;
-
-          if (elapsed < DICE_ROLL_DURATION) {
-            // Show random dice values during animation
-            const randomDie1 = Math.floor(Math.random() * 6) + 1;
-            const randomDie2 = Math.floor(Math.random() * 6) + 1;
-            setState((prev) => ({
-              ...prev,
-              diceValues: [randomDie1, randomDie2] as [number, number],
-            }));
-            diceAnimationRef.current = setTimeout(animate, DICE_CYCLE_INTERVAL);
-          } else {
-            // Show final values
-            setState((prev) => ({
-              ...prev,
-              diceValues: finalValues,
-              isRolling: false,
-            }));
-            resolve();
-          }
-        };
-
-        animate();
+        // After exactly 2 seconds, stop and show results
+        diceAnimationRef.current = setTimeout(() => {
+          setState((prev) => ({
+            ...prev,
+            diceValues: finalValues,
+            isRolling: false,
+          }));
+          resolve();
+        }, DICE_ROLL_DURATION);
       });
     },
     []

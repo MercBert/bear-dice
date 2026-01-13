@@ -17,8 +17,8 @@ const dotPositions: Record<number, number[]> = {
   6: [0, 2, 3, 5, 6, 8],     // two columns
 };
 
-// Rotation values to land on each number (front face shows the value)
-const diceRotations: Record<number, { x: number; y: number }> = {
+// Final rotation values to land on each number (front face shows the value)
+const FINAL_ROTATIONS: Record<number, { x: number; y: number }> = {
   1: { x: 0, y: 0 },
   2: { x: -90, y: 0 },
   3: { x: 0, y: 90 },
@@ -43,58 +43,22 @@ function DiceFace({ value }: { value: number }) {
 }
 
 export default function Dice3D({ value, isRolling }: Dice3DProps) {
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [hasLanded, setHasLanded] = useState(true);
+  const [displayRotation, setDisplayRotation] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (isRolling) {
-      // Reset rotation before starting new roll
-      setRotation({ x: 0, y: 0 });
-      setHasLanded(false);
-
-      // Small delay then start rapid spinning
-      const startTimeout = setTimeout(() => {
-        setIsAnimating(true);
-      }, 50);
-
-      // Random spin during roll (faster interval for smoother animation)
-      const spinInterval = setInterval(() => {
-        setRotation({
-          x: Math.random() * 360,
-          y: Math.random() * 360,
-        });
-      }, 50);
-
-      return () => {
-        clearTimeout(startTimeout);
-        clearInterval(spinInterval);
-      };
-    } else {
-      // Land on the final value
-      setIsAnimating(false);
-      const target = diceRotations[value] || diceRotations[1];
-
-      // Set final rotation
-      setRotation({
-        x: target.x,
-        y: target.y,
-      });
-
-      // Mark as landed for smooth transition
-      setTimeout(() => setHasLanded(true), 50);
+    if (!isRolling && value) {
+      // When rolling stops, set final position
+      setDisplayRotation(FINAL_ROTATIONS[value] || FINAL_ROTATIONS[1]);
     }
   }, [isRolling, value]);
-
-  const cubeClass = isAnimating ? 'rolling' : hasLanded ? 'landed' : '';
 
   return (
     <div className="dice-3d">
       <div
-        className={`dice-cube ${cubeClass}`}
-        style={{
-          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
-        }}
+        className={`dice-cube ${isRolling ? 'rolling' : 'stopped'}`}
+        style={!isRolling ? {
+          transform: `rotateX(${displayRotation.x}deg) rotateY(${displayRotation.y}deg)`
+        } : undefined}
       >
         {/* Front face - shows 1 */}
         <div className="dice-face front">

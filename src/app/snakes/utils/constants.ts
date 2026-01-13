@@ -179,7 +179,7 @@ export const MIN_BET = 0.01;
 export const MAX_BET = 100;
 
 // Animation timings (ms)
-export const DICE_ROLL_DURATION = 800;
+export const DICE_ROLL_DURATION = 2000; // Exactly 2 seconds of smooth spinning
 export const DICE_CYCLE_INTERVAL = 50;
 export const WIN_DISPLAY_DURATION = 2000;
 export const LOSE_DISPLAY_DURATION = 1500;
