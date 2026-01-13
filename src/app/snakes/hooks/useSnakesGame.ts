@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { GameState, Difficulty, GameMode, TileState } from '../types';
+import { useAudio } from './useAudio';
 import {
   generateBoard,
   rollDice,
@@ -48,6 +49,7 @@ export function useSnakesGame() {
   const [state, setState] = useState<GameState>(initialState);
   const autoPlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const diceAnimationRef = useRef<NodeJS.Timeout | null>(null);
+  const { play, stop } = useAudio();
 
   // Cleanup on unmount
   useEffect(() => {
@@ -158,6 +160,10 @@ export function useSnakesGame() {
     const [die1, die2] = diceResult;
     const position = die1 + die2; // Tile position = sum of dice (2-12)
 
+    // Play dice roll sound (stop any previous to handle rapid re-rolls)
+    stop('diceRoll');
+    play('diceRoll');
+
     // Animate dice - passes the SAME values to display
     await animateDice(diceResult);
 
@@ -216,7 +222,7 @@ export function useSnakesGame() {
         };
       }
     });
-  }, [state, animateDice]);
+  }, [state, animateDice, play, stop]);
 
   // Cash out
   const cashout = useCallback(() => {
