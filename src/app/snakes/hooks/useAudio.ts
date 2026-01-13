@@ -47,6 +47,10 @@ export function useAudio() {
     const storedMuted = localStorage.getItem(STORAGE_KEY) === 'true';
     (Object.keys(audioElements) as AudioKey[]).forEach((key) => {
       audioElements[key].muted = storedMuted;
+      // Set ambient volume lower than game sounds
+      if (key === 'ambient') {
+        audioElements[key].volume = 0.3;
+      }
       audioElements[key].load();
     });
 
