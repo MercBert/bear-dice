@@ -12,7 +12,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
  * stop('diceRoll'); // Stop it
  */
 
-export type AudioKey = 'diceRoll' | 'win' | 'lose' | 'click' | 'ambient';
+export type AudioKey = 'diceRoll' | 'win' | 'lose' | 'click' | 'ambient' | 'footstep';
 
 const AUDIO_PATHS: Record<AudioKey, string> = {
   diceRoll: '/audio/dice-roll.mp3',
@@ -20,6 +20,7 @@ const AUDIO_PATHS: Record<AudioKey, string> = {
   lose: '/audio/lose.mp3',
   click: '/audio/click.mp3',
   ambient: '/audio/ambient.mp3',
+  footstep: '/audio/footstep.mp3',
 };
 
 const STORAGE_KEY = 'audio-muted';
@@ -41,6 +42,7 @@ export function useAudio() {
       lose: new Audio(AUDIO_PATHS.lose),
       click: new Audio(AUDIO_PATHS.click),
       ambient: new Audio(AUDIO_PATHS.ambient),
+      footstep: new Audio(AUDIO_PATHS.footstep),
     };
 
     // Apply initial mute state and preload

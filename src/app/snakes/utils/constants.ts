@@ -184,6 +184,7 @@ export const DICE_CYCLE_INTERVAL = 50;
 export const WIN_DISPLAY_DURATION = 2000;
 export const LOSE_DISPLAY_DURATION = 1500;
 export const AUTO_ROLL_DELAY = 1000;
+export const STEP_DURATION = 400; // Time per tile in stepping animation
 
 // Difficulty display names
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
