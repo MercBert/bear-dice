@@ -2,7 +2,9 @@ import { Difficulty, TileState } from '../types';
 import { DIFFICULTY_CONFIGS, POSITION_MULTIPLIERS } from './constants';
 
 /**
- * Roll two dice and return the result
+ * Roll two dice and return the result.
+ * IMPORTANT: This is the ONLY place dice values are generated.
+ * The returned values must be used for both display AND tile position.
  */
 export function rollDice(): [number, number] {
   const die1 = Math.floor(Math.random() * 6) + 1;

@@ -132,14 +132,16 @@ export function useSnakesGame() {
     if (currentState.gameStatus !== 'playing' || currentState.isRolling) return;
     if (currentState.currentRoll >= MAX_ROLLS) return;
 
-    // Roll the dice
+    // SINGLE SOURCE OF TRUTH: Generate dice values ONCE
+    // These exact values are used for BOTH display AND tile position
     const diceResult = rollDice();
-    const position = diceResult[0] + diceResult[1];
+    const [die1, die2] = diceResult;
+    const position = die1 + die2; // Tile position = sum of dice (2-12)
 
-    // Animate the dice
+    // Animate dice - passes the SAME values to display
     await animateDice(diceResult);
 
-    // Get the tile at the position
+    // Get tile using the SAME position calculated from dice
     const tile = getTileAtPosition(currentState.board, position);
 
     if (!tile) return;
