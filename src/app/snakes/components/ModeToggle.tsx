@@ -15,14 +15,14 @@ export default function ModeToggle({
 }: ModeToggleProps) {
   return (
     <div
-      className="flex rounded-xl overflow-hidden p-1"
+      className="flex rounded-xl overflow-hidden p-0.5 md:p-1"
       style={{
         backgroundColor: 'var(--bg-primary)',
         border: '2px solid var(--text-tertiary)'
       }}
     >
       <button
-        className={`flex-1 py-3 px-4 text-sm font-bold transition-all rounded-lg ${
+        className={`flex-1 py-2 md:py-3 px-3 md:px-4 text-xs md:text-sm font-bold transition-all rounded-lg ${
           mode === 'manual'
             ? ''
             : 'hover:opacity-80'
@@ -37,7 +37,7 @@ export default function ModeToggle({
         Manual
       </button>
       <button
-        className={`flex-1 py-3 px-4 text-sm font-bold transition-all rounded-lg ${
+        className={`flex-1 py-2 md:py-3 px-3 md:px-4 text-xs md:text-sm font-bold transition-all rounded-lg ${
           mode === 'auto'
             ? ''
             : 'hover:opacity-80'

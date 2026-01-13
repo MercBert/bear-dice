@@ -17,32 +17,32 @@ export default function NetGainDisplay({
 
   return (
     <div
-      className="space-y-3 pt-5 mt-2"
+      className="space-y-2 md:space-y-3 pt-3 md:pt-5 mt-1 md:mt-2"
       style={{ borderTop: '2px solid var(--text-tertiary)' }}
     >
       {/* Balance */}
       <div className="flex justify-between items-center">
         <span
-          className="text-xs font-bold uppercase tracking-wider"
+          className="text-[0.7rem] md:text-xs font-bold uppercase tracking-wider"
           style={{ color: 'var(--text-secondary)' }}
         >
           Balance
         </span>
-        <span className="font-bold slashed-zero" style={{ color: 'var(--text-primary)' }}>
+        <span className="font-bold slashed-zero text-sm md:text-base" style={{ color: 'var(--text-primary)' }}>
           {balance.toFixed(2)} {CURRENCY_SYMBOL}
         </span>
       </div>
 
       {/* Total Net Gain */}
       <div
-        className="rounded-xl p-4"
+        className="rounded-xl p-3 md:p-4"
         style={{
           backgroundColor: 'var(--bg-primary)',
           border: '2px solid var(--text-tertiary)',
         }}
       >
         <div
-          className="text-xs font-bold uppercase tracking-wider mb-1"
+          className="text-[0.7rem] md:text-xs font-bold uppercase tracking-wider mb-0.5 md:mb-1"
           style={{ color: 'var(--text-secondary)' }}
         >
           Total Net Gain
@@ -52,7 +52,7 @@ export default function NetGainDisplay({
           initial={{ scale: 1 }}
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 0.2 }}
-          className="text-2xl font-black slashed-zero"
+          className="text-xl md:text-2xl font-black slashed-zero"
           style={{
             color: isPositive
               ? 'var(--state-success-text)'

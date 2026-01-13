@@ -31,11 +31,11 @@ export default function ManualControls({
   const payout = betAmount * currentMultiplier;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 md:space-y-3">
       {isIdle ? (
         <motion.button
           onClick={onPlay}
-          className="w-full py-4 font-bold rounded-xl transition-all"
+          className="w-full py-3 md:py-4 font-bold rounded-xl transition-all text-sm md:text-base"
           style={{
             backgroundColor: 'var(--accent-amber)',
             color: 'var(--text-on-amber)',
@@ -47,11 +47,11 @@ export default function ManualControls({
           Play
         </motion.button>
       ) : isPlaying ? (
-        <div className="flex gap-3">
+        <div className="flex gap-2 md:gap-3">
           <motion.button
             onClick={onCashout}
             disabled={!canCashout}
-            className={`flex-1 py-4 font-bold rounded-xl transition-all ${
+            className={`flex-1 py-2.5 md:py-4 font-bold rounded-xl transition-all ${
               !canCashout ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             style={{
@@ -62,9 +62,9 @@ export default function ManualControls({
             whileHover={canCashout ? { scale: 1.02, y: -1 } : {}}
             whileTap={canCashout ? { scale: 0.98, y: 1 } : {}}
           >
-            <div className="text-sm">Cashout</div>
+            <div className="text-xs md:text-sm">Cashout</div>
             {canCashout && (
-              <div className="text-xs opacity-80 slashed-zero">
+              <div className="text-[10px] md:text-xs opacity-80 slashed-zero">
                 {formatMultiplier(currentMultiplier)} = {payout.toFixed(2)} G
               </div>
             )}
@@ -72,7 +72,7 @@ export default function ManualControls({
           <motion.button
             onClick={onRoll}
             disabled={!canRoll}
-            className={`flex-1 py-4 font-bold rounded-xl transition-all ${
+            className={`flex-1 py-2.5 md:py-4 font-bold rounded-xl transition-all text-sm md:text-base ${
               !canRoll ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             style={{
@@ -89,7 +89,7 @@ export default function ManualControls({
       ) : (
         <motion.button
           onClick={onPlay}
-          className="w-full py-4 font-bold rounded-xl transition-all"
+          className="w-full py-3 md:py-4 font-bold rounded-xl transition-all text-sm md:text-base"
           style={{
             backgroundColor: 'var(--accent-amber)',
             color: 'var(--text-on-amber)',

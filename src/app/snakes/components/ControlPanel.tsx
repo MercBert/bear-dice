@@ -55,19 +55,19 @@ export default function ControlPanel({
 
   return (
     <div
-      className="w-full rounded-3xl p-6 flex flex-col"
+      className="w-full rounded-3xl p-4 md:p-6 flex flex-col"
       style={{ backgroundColor: 'var(--bg-secondary)' }}
     >
       {/* Panel Header */}
       <h2
-        className="text-xl font-bold mb-5"
+        className="text-lg md:text-xl font-bold mb-3 md:mb-5"
         style={{ color: 'var(--text-primary)' }}
       >
         Setup Game
       </h2>
 
       {/* Controls Section - flex with order classes for mobile reordering */}
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3 md:gap-5">
         {/* Play/Roll Controls - first on mobile, fourth on desktop */}
         <div className="order-1 md:order-4">
           {mode === 'manual' ? (

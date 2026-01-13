@@ -27,17 +27,17 @@ export default function BetInput({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1 md:space-y-2">
       <label
-        className="text-xs font-bold uppercase tracking-wider"
+        className="text-[0.7rem] md:text-xs font-bold uppercase tracking-wider"
         style={{ color: 'var(--text-secondary)' }}
       >
         Bet Amount
       </label>
-      <div className="flex gap-2">
+      <div className="flex gap-1.5 md:gap-2">
         <div className="flex-1 relative">
           <span
-            className="absolute left-3 top-1/2 -translate-y-1/2 font-bold"
+            className="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 font-bold text-sm md:text-base"
             style={{ color: 'var(--text-secondary)' }}
           >
             {CURRENCY_SYMBOL}
@@ -50,7 +50,7 @@ export default function BetInput({
             step="0.01"
             min="0.01"
             max={maxBet}
-            className={`w-full rounded-lg py-3 pl-8 pr-3 text-right font-bold slashed-zero focus:outline-none ${
+            className={`w-full rounded-lg py-2 md:py-3 pl-6 md:pl-8 pr-2 md:pr-3 text-right font-bold slashed-zero focus:outline-none text-sm md:text-base ${
               disabled ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             style={{
@@ -63,7 +63,7 @@ export default function BetInput({
         <button
           onClick={onHalf}
           disabled={disabled}
-          className={`px-4 py-3 rounded-lg text-sm font-bold transition-all hover:border-amber-400 ${
+          className={`px-3 md:px-4 py-2 md:py-3 rounded-lg text-sm font-bold transition-all hover:border-amber-400 ${
             disabled ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           style={{
@@ -77,7 +77,7 @@ export default function BetInput({
         <button
           onClick={onDouble}
           disabled={disabled}
-          className={`px-4 py-3 rounded-lg text-sm font-bold transition-all hover:border-amber-400 ${
+          className={`px-3 md:px-4 py-2 md:py-3 rounded-lg text-sm font-bold transition-all hover:border-amber-400 ${
             disabled ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           style={{
