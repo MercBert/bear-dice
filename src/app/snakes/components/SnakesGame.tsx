@@ -24,7 +24,7 @@ export default function SnakesGame() {
     doubleBet,
   } = useSnakesGame();
 
-  const { play } = useAudio();
+  const { play, toggleMute, isMuted } = useAudio();
 
   // Track if ambient music has started (starts on first user interaction)
   const ambientStartedRef = useRef(false);
@@ -122,6 +122,8 @@ export default function SnakesGame() {
           onStartAutoPlay={startAutoPlay}
           onStopAutoPlay={stopAutoPlay}
           onClickSound={playClick}
+          isMuted={isMuted}
+          onToggleMute={toggleMute}
         />
       </div>
     </div>

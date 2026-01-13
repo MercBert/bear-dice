@@ -1,6 +1,7 @@
 'use client';
 
 import ModeToggle from './ModeToggle';
+import MuteToggle from './MuteToggle';
 import BetInput from './BetInput';
 import DifficultySelect from './DifficultySelect';
 import ManualControls from './ManualControls';
@@ -24,6 +25,8 @@ interface ControlPanelProps {
   onStartAutoPlay: () => void;
   onStopAutoPlay: () => void;
   onClickSound?: () => void;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
 }
 
 export default function ControlPanel({
@@ -41,6 +44,8 @@ export default function ControlPanel({
   onStartAutoPlay,
   onStopAutoPlay,
   onClickSound,
+  isMuted,
+  onToggleMute,
 }: ControlPanelProps) {
   const {
     betAmount,
@@ -65,12 +70,17 @@ export default function ControlPanel({
       style={{ backgroundColor: 'var(--bg-secondary)' }}
     >
       {/* Panel Header */}
-      <h2
-        className="text-lg md:text-xl font-bold mb-3 md:mb-5"
-        style={{ color: 'var(--text-primary)' }}
-      >
-        Setup Game
-      </h2>
+      <div className="flex items-center justify-between mb-3 md:mb-5">
+        <h2
+          className="text-lg md:text-xl font-bold"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          Setup Game
+        </h2>
+        {onToggleMute && (
+          <MuteToggle isMuted={isMuted ?? false} onToggle={onToggleMute} />
+        )}
+      </div>
 
       {/* Controls Section - flex with order classes for mobile reordering */}
       <div className="flex flex-col gap-3 md:gap-5">
