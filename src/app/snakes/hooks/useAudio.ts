@@ -12,15 +12,15 @@ import { useState, useCallback, useRef, useEffect } from 'react';
  * stop('diceRoll'); // Stop it
  */
 
-export type AudioKey = 'diceRoll' | 'win' | 'lose' | 'click' | 'ambient' | 'footstep';
+export type AudioKey = 'diceRoll' | 'win' | 'lose' | 'click' | 'footstep' | 'coin';
 
 const AUDIO_PATHS: Record<AudioKey, string> = {
   diceRoll: '/audio/dice-roll.mp3',
   win: '/audio/win.mp3',
   lose: '/audio/lose.mp3',
   click: '/audio/click.mp3',
-  ambient: '/audio/ambient.mp3',
   footstep: '/audio/footstep.mp3',
+  coin: '/audio/coin.mp3',
 };
 
 const STORAGE_KEY = 'audio-muted';
@@ -41,18 +41,14 @@ export function useAudio() {
       win: new Audio(AUDIO_PATHS.win),
       lose: new Audio(AUDIO_PATHS.lose),
       click: new Audio(AUDIO_PATHS.click),
-      ambient: new Audio(AUDIO_PATHS.ambient),
       footstep: new Audio(AUDIO_PATHS.footstep),
+      coin: new Audio(AUDIO_PATHS.coin),
     };
 
     // Apply initial mute state and preload
     const storedMuted = localStorage.getItem(STORAGE_KEY) === 'true';
     (Object.keys(audioElements) as AudioKey[]).forEach((key) => {
       audioElements[key].muted = storedMuted;
-      // Set ambient volume lower than game sounds
-      if (key === 'ambient') {
-        audioElements[key].volume = 0.3;
-      }
       audioElements[key].load();
     });
 
@@ -84,11 +80,6 @@ export function useAudio() {
     if (!audioRef.current || audioRef.current[key].muted) return;
 
     const audio = audioRef.current[key];
-
-    // For ambient, set loop
-    if (key === 'ambient') {
-      audio.loop = true;
-    }
 
     // Reset to start if already playing
     audio.currentTime = 0;

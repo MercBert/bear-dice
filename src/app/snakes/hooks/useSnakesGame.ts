@@ -290,6 +290,9 @@ export function useSnakesGame() {
       play('lose');
     } else if (isMaxRolls) {
       play('win');
+    } else {
+      // Landed on multiplier tile, game continues - play coin sound
+      play('coin');
     }
   }, [state, animateDice, animateSteps, play, stop]);
 
