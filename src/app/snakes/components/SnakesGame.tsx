@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
 import ControlPanel from './ControlPanel';
 import GameBoard from './GameBoard';
 import { useSnakesGame } from '../hooks/useSnakesGame';
@@ -26,26 +26,15 @@ export default function SnakesGame() {
 
   const { play, toggleMute, isMuted } = useAudio();
 
-  // Track if ambient music has started (starts on first user interaction)
-  const ambientStartedRef = useRef(false);
-
-  const startAmbient = useCallback(() => {
-    if (ambientStartedRef.current) return;
-    ambientStartedRef.current = true;
-    play('ambient');
-  }, [play]);
-
   const playClick = useCallback(() => {
-    startAmbient();
     play('click');
-  }, [play, startAmbient]);
+  }, [play]);
 
   // Keyboard controls
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.code === 'Space' || e.code === 'Enter') {
         e.preventDefault();
-        startAmbient(); // Start ambient on keyboard interaction
         if (state.mode === 'manual') {
           if (state.gameStatus === 'idle') {
             startGame();
@@ -58,7 +47,6 @@ export default function SnakesGame() {
       }
 
       if (e.code === 'Escape') {
-        startAmbient(); // Start ambient on keyboard interaction
         if (state.mode === 'auto' && state.autoSettings.isRunning) {
           stopAutoPlay();
         } else if (state.mode === 'manual' && state.gameStatus === 'playing') {
@@ -66,7 +54,7 @@ export default function SnakesGame() {
         }
       }
     },
-    [state, startGame, roll, cashout, resetGame, stopAutoPlay, startAmbient]
+    [state, startGame, roll, cashout, resetGame, stopAutoPlay]
   );
 
   useEffect(() => {
